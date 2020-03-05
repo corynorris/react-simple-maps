@@ -1,37 +1,42 @@
+import React, { useContext } from "react";
+import PropTypes from "prop-types";
 
-import React, { useContext } from "react"
-import PropTypes from "prop-types"
+import { MapContext } from "./MapProvider";
 
-import { MapContext } from "./MapProvider"
+const Line = React.forwardRef(
+  (
+    {
+      from = [0, 0],
+      to = [0, 0],
+      coordinates,
+      stroke = "currentcolor",
+      strokeWidth = 3,
+      fill = "transparent",
+      className = "",
+      ...restProps
+    },
+    ref
+  ) => {
+    const { path } = useContext(MapContext);
 
-const Line = ({
-  from = [0, 0],
-  to = [0, 0],
-  coordinates,
-  stroke = "currentcolor",
-  strokeWidth = 3,
-  fill = "transparent",
-  className = "",
-  ...restProps
-}) => {
-  const { path } = useContext(MapContext)
+    const lineData = {
+      type: "LineString",
+      coordinates: coordinates || [from, to]
+    };
 
-  const lineData = {
-    type: "LineString",
-    coordinates: coordinates || [from, to],
+    return (
+      <path
+        ref={ref}
+        d={path(lineData)}
+        className={`rsm-line ${className}`}
+        stroke={stroke}
+        strokeWidth={strokeWidth}
+        fill={fill}
+        {...restProps}
+      />
+    );
   }
-
-  return (
-    <path
-      d={path(lineData)}
-      className={`rsm-line ${className}`}
-      stroke={stroke}
-      strokeWidth={strokeWidth}
-      fill={fill}
-      {...restProps}
-    />
-  )
-}
+);
 
 Line.propTypes = {
   from: PropTypes.array,
@@ -40,7 +45,7 @@ Line.propTypes = {
   stroke: PropTypes.string,
   strokeWidth: PropTypes.number,
   fill: PropTypes.string,
-  className: PropTypes.string,
-}
+  className: PropTypes.string
+};
 
-export default Line
+export default Line;
